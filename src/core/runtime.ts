@@ -2,6 +2,7 @@ import type { RuntimeComponent } from '../components/contracts.js';
 import { ComponentRegistry } from '../components/registry.js';
 import { EventBus } from '../events/event-bus.js';
 import { LocalApiServer } from '../api/server.js';
+import { createLogger } from '../observability/logger.js';
 
 export type RuntimeState = 'idle' | 'starting' | 'running' | 'stopping' | 'stopped' | 'failed';
 export type RuntimeStatus = { identity: string; state: RuntimeState; api?: { host: string; port: number } };
@@ -9,12 +10,17 @@ type RuntimeOptions = { identity: string; api?: { host: string; port: number; ve
 
 export class CoreRuntime {
   #state: RuntimeState = 'idle';
-  #events = new EventBus();
-  #registry = new ComponentRegistry(this.#events);
+  #events: EventBus;
+  #registry: ComponentRegistry;
   #api: LocalApiServer | undefined;
   #apiAddress: { host: string; port: number } | undefined;
 
-  constructor(private readonly options: RuntimeOptions) { for (const component of options.components ?? []) this.#registry.register(component); }
+  constructor(private readonly options: RuntimeOptions) {
+    const logger = createLogger(options.identity);
+    this.#events = new EventBus((failure) => logger.error({ event: 'event.delivery_failed', event_type: failure.eventType, error: failure.error }));
+    this.#registry = new ComponentRegistry(this.#events);
+    for (const component of options.components ?? []) this.#registry.register(component);
+  }
 
   async start(): Promise<void> {
     if (this.#state !== 'idle') throw new Error(`Runtime cannot start from state ${this.#state}`);

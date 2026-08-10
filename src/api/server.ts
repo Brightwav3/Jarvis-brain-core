@@ -10,8 +10,9 @@ export class LocalApiServer {
   async start(port: number, host = '127.0.0.1'): Promise<{ port: number }> {
     const health = new HealthService(this.dependencies.components);
     this.#server = createServer((request, response) => {
-      const data = request.url === '/health' ? health.status() : request.url === '/status' ? this.dependencies.status() : request.url === '/components' ? this.dependencies.components() : request.url === '/version' ? { identity: this.dependencies.identity, version: this.dependencies.version } : undefined;
       response.setHeader('content-type', 'application/json');
+      if (request.method !== 'GET') { response.statusCode = 405; response.end(JSON.stringify({ ok: false, error: { code: 'METHOD_NOT_ALLOWED', message: 'Method not allowed', context: { method: request.method }, remediation: 'Use GET for this endpoint' } })); return; }
+      const data = request.url === '/health' ? health.status() : request.url === '/status' ? this.dependencies.status() : request.url === '/components' ? this.dependencies.components() : request.url === '/version' ? { identity: this.dependencies.identity, version: this.dependencies.version } : undefined;
       if (data === undefined) { response.statusCode = 404; response.end(JSON.stringify({ ok: false, error: { code: 'ROUTE_NOT_FOUND', message: 'Route not found', context: { path: request.url }, remediation: 'Use a documented local route' } })); return; }
       response.end(JSON.stringify(createOk(data)));
     });

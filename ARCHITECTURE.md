@@ -15,3 +15,9 @@ The process remains foreground-only. It will provide configuration, structured l
 ## Identity
 
 Runtime-facing identity is supplied by configuration or package metadata. Contracts must not embed a product-specific name.
+
+## Component state model
+
+Lifecycle state records what the runtime did with a component: `registered`, `running`, `failed`, or `stopped`. Health state records the component's service condition: `healthy`, `degraded`, or `unhealthy`.
+
+The registry owns lifecycle state. A component reports health through `health()`. Health aggregation gives a failed lifecycle state precedence; otherwise it uses the component-reported health state. This prevents lifecycle progress from being mistaken for service health.
