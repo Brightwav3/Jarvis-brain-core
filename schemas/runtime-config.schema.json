@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["identity", "api", "log"],
+  "properties": { "identity": { "type": "string", "minLength": 1 }, "api": { "type": "object", "required": ["host", "port"] }, "log": { "type": "object", "required": ["level"] } }
+}
