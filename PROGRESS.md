@@ -17,7 +17,7 @@ Verified on 2026-08-10:
 
 ## Remaining milestones
 
-- 0.2 Foreground lifecycle
+- 0.2 Foreground lifecycle — complete after the Milestone 0.2 verification commands pass.
 - 0.3 Configuration
 - 0.4 Structured logging
 - 0.5 Event bus
