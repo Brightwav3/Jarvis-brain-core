@@ -25,3 +25,18 @@ Verified on 2026-08-10:
 - 0.7 Local API
 - 0.8 Health system
 - 0.9 Automated verification
+
+## Current verification target
+
+Phase 0 completion requires a fresh `npm run typecheck`, `npm test`, and `npm run build`, plus a foreground-runtime API smoke test. Results are recorded after those checks complete.
+
+## Verified Phase 0 state
+
+Verified on 2026-08-10:
+
+- `npm run typecheck` exited 0.
+- `npm test` exited 0 with 11 passing tests and 0 failures.
+- `npm run build` exited 0.
+- A foreground runtime remained alive, served JSON `status` and `health`, and reported `healthy`.
+
+Phase 0 is complete. No AI, voice, device, memory, Home Assistant, satellite, automation, or model integration was added.

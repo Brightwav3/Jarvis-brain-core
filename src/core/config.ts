@@ -1,8 +1,4 @@
 import { z } from 'zod';
-import { createRequire } from 'node:module';
-
-const require = createRequire(import.meta.url);
-const packageMetadata = require('../../package.json') as { name: string };
 
 const levels = ['fatal', 'error', 'warn', 'info', 'debug', 'trace'] as const;
 const schema = z.object({
@@ -22,7 +18,7 @@ export class ConfigError extends Error {
 
 export const loadConfig = (env: NodeJS.ProcessEnv): RuntimeConfig => {
   const parsed = schema.safeParse({
-    identity: env.RUNTIME_IDENTITY ?? packageMetadata.name,
+    identity: env.RUNTIME_IDENTITY ?? 'core-runtime',
     api: { host: env.RUNTIME_API_HOST ?? '127.0.0.1', port: Number(env.RUNTIME_API_PORT ?? '4310') },
     log: { level: env.RUNTIME_LOG_LEVEL ?? 'info' },
   });
