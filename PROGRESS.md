@@ -1,6 +1,12 @@
 # Phase 0 Progress
 
-Status: complete.
+Status: complete, and consumed in production by Assistant Runtime since
+2026-08-12.
+
+The public package entry (`src/index.ts`, the `exports` map, and declaration
+output) was added on 2026-08-12; without it the runtime was importable only as a
+CLI, which is why the first consumer had written its own component lifecycle
+instead. That duplicate is now removed.
 
 Verified on 2026-08-10:
 

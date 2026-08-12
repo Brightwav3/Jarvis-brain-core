@@ -6,6 +6,19 @@ Phase 0 defines only a headless core runtime: lifecycle, configuration, structur
 
 Status: Phase 0 is complete after automated verification.
 
+Core Runtime is consumed as a library, not only as a CLI. It publishes a public
+package entry, so other components host themselves inside it:
+
+```ts
+import { CoreRuntime, type RuntimeComponent } from 'core-runtime';
+```
+
+Assistant Runtime uses this registry to own component lifecycle, failure
+isolation, and health aggregation. A component's `health()` may be synchronous or
+asynchronous, a component may report `capabilities()`, and a required component
+that fails to start stops everything already started rather than leaving the
+system half-running.
+
 ## Agent commands
 
 All commands emit JSON.
