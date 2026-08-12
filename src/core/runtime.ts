@@ -3,6 +3,9 @@ import { ComponentRegistry } from '../components/registry.js';
 import { EventBus } from '../events/event-bus.js';
 import { LocalApiServer } from '../api/server.js';
 import { createLogger } from '../observability/logger.js';
+import { HealthService } from '../observability/health.js';
+import type { HealthReport } from '../observability/health.js';
+import type { ComponentRecord } from '../components/contracts.js';
 
 export type RuntimeState = 'idle' | 'starting' | 'running' | 'stopping' | 'stopped' | 'failed';
 export type RuntimeStatus = { identity: string; state: RuntimeState; api?: { host: string; port: number } };
@@ -47,6 +50,20 @@ export class CoreRuntime {
     this.#state = 'stopped';
     await this.#events.publish({ type: 'core.stopped', source: this.options.identity, timestamp: new Date().toISOString() });
   }
+
+  /** Registers a component before start; the registry owns its lifecycle from then on. */
+  register(component: RuntimeComponent): void {
+    if (this.#state !== 'idle') throw new Error(`Components cannot be registered from state ${this.#state}`);
+    this.#registry.register(component);
+  }
+
+  events(): EventBus { return this.#events; }
+
+  components(): Promise<ComponentRecord[]> { return this.#registry.list(); }
+
+  capabilities(): Promise<Record<string, Record<string, unknown>>> { return this.#registry.capabilities(); }
+
+  health(): Promise<HealthReport> { return new HealthService(() => this.#registry.list()).status(); }
 
   status(): RuntimeStatus { return { identity: this.options.identity, state: this.#state, ...(this.#apiAddress ? { api: this.#apiAddress } : {}) }; }
 }
