@@ -1,5 +1,10 @@
 # Core Runtime
 
+[![CI](https://github.com/Brightwav3/Jarvis-brain-core/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Brightwav3/Jarvis-brain-core/actions/workflows/ci.yml)
+[![Node.js 22+](https://img.shields.io/badge/Node.js-22%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Part of Assistant Mark I](https://img.shields.io/badge/Part%20of-Assistant%20Mark%20I-6f42c1)](https://github.com/Brightwav3/Assistant-mark-I)
+
 Infrastructure repository for the first, model-independent foundation of a long-term runtime system.
 
 Phase 0 defines only a headless core runtime: lifecycle, configuration, structured logging, an event bus, component registry, local API, health reporting, and automated tests. It intentionally excludes AI, voice, devices, automation, and memory.
